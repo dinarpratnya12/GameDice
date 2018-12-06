@@ -43,43 +43,43 @@ public class ThrowListener implements ActionListener {
     
     @Override 
     public void actionPerformed(ActionEvent e) {
-        Thread humanPlayer = new Thread(new Runnable() {
+        Thread userPlayer = new Thread(new Runnable() {
             @Override 
             public void run() {
-                GameWindow.controller.getPlayer(PlayerType.HUMAN).roll();
-                final JDialog game = new JDialog(frame, "current game", true);
-                GameWindow.controller.getPlayer(PlayerType.HUMAN).getController().setGame(game);
+                GameWindow.controller.getPlayer(PlayerType.USER).roll();
+                final JDialog game = new JDialog(frame, "Pilih Angka Dadu", true);
+                GameWindow.controller.getPlayer(PlayerType.USER).getController().setGame(game);
                 final JPanel diceResult = new JPanel(new GridLayout(1, 5));
                 diceResult.setBorder(
-                new TitledBorder("Current Result"));
-               final JButton reRollBtn = new JButton("Reroll");
-               reRollBtn.setEnabled((GameWindow.controller.getPlayer(PlayerType.HUMAN).getKeeping().size() < 5) 
+                new TitledBorder("Angka Dadu"));
+               final JButton reRollBtn = new JButton("Acak");
+               reRollBtn.setEnabled((GameWindow.controller.getPlayer(PlayerType.USER).getKeeping().size() < 5) 
                        && (GameWindow.controller.getPlayer
-        (PlayerType.HUMAN).getController().getCount() > 0));
+        (PlayerType.USER).getController().getCount() > 0));
                
                reRollBtn.addActionListener(new ThrowListener(frame, scoreTable, throwDice));
                
                for (int i = 0; i< 5; i++) {
                    final JPanel diePanel = new JPanel(new GridLayout(2,1));
                    final JCheckBox checkBox = new JCheckBox();
-                   checkBox.setText(GameWindow.controller.getPlayer(PlayerType.HUMAN).getLastRolled()[i].getValue() + "");
+                   checkBox.setText(GameWindow.controller.getPlayer(PlayerType.USER).getLastRolled()[i].getValue() + "");
                    checkBox.addItemListener(new ItemListener() {
                        @Override
                        public void itemStateChanged(ItemEvent e) {
                            JCheckBox checked = (JCheckBox) e.getItem();
                            if (checked.isSelected()) {
-                               GameWindow.controller.getPlayer(PlayerType.HUMAN).getKeeping().
+                               GameWindow.controller.getPlayer(PlayerType.USER).getKeeping().
                                        add(new Die(Integer.parseInt(checked.getText()), null));
                            } else {
-                               GameWindow.controller.getPlayer(PlayerType.HUMAN).getKeeping().
+                               GameWindow.controller.getPlayer(PlayerType.USER).getKeeping().
                                        remove(new Die(Integer.parseInt(checked.getText()), null));
                            }
-                           reRollBtn.setEnabled((GameWindow.controller.getPlayer(PlayerType.HUMAN).getKeeping().size() < 5) 
-                       && (GameWindow.controller.getPlayer(PlayerType.HUMAN).getController().getCount() > 0));
+                           reRollBtn.setEnabled((GameWindow.controller.getPlayer(PlayerType.USER).getKeeping().size() < 5) 
+                       && (GameWindow.controller.getPlayer(PlayerType.USER).getController().getCount() > 0));
                        }
                    });
                    
-                   JLabel label = new JLabel(GameWindow.controller.getPlayer(PlayerType.HUMAN).getLastRolled()[i].getImage());
+                   JLabel label = new JLabel(GameWindow.controller.getPlayer(PlayerType.USER).getLastRolled()[i].getImage());
                    
                    diePanel.add(label, BorderLayout.NORTH);
                    diePanel.add(checkBox, BorderLayout.CENTER);
@@ -92,7 +92,7 @@ public class ThrowListener implements ActionListener {
                    @Override
                    public void actionPerformed(ActionEvent e) {
                        game.dispose();
-                       if (GameWindow.controller.getHuman().getScore() == GameWindow.controller.getComputer().getScore()) {
+                       if (GameWindow.controller.getUser().getScore() == GameWindow.controller.getComputer().getScore()) {
                            GameWindow.controller.setNewZeroReRollGame();
                        } else {
                            GameWindow.controller.setNewGame();
@@ -114,7 +114,7 @@ public class ThrowListener implements ActionListener {
             }
         });
         
-        humanPlayer.start();
+        userPlayer.start();
   
     
     Thread aiPlayer = new Thread(new Runnable() {

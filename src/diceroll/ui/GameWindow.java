@@ -88,7 +88,7 @@ public class GameWindow {
         final JButton newGame = new JButton("New Game");
         gameDetails.add(newGame, BorderLayout.WEST);
         
-        final JButton chMaxScore = new JButton("Change Max Score");
+        final JButton chMaxScore = new JButton("Max Score");
         gameDetails.add(chMaxScore, BorderLayout.EAST);
         chMaxScore.setEnabled(!controller.isGameGoingOn());
         newGame.setEnabled(!controller.isGameGoingOn());
@@ -115,7 +115,7 @@ public class GameWindow {
          public void actionPerformed(ActionEvent e) {
              Boolean didEnter = Boolean.FALSE;
              while (!didEnter) {
-                 String score = (String) JOptionPane.showInputDialog(frame, "Please enter new Max Score", "Max Score", JOptionPane.QUESTION_MESSAGE, null, null, controller.getMaxScore());
+                 String score = (String) JOptionPane.showInputDialog(frame, "Masukkan Score Baru", "Max Score", JOptionPane.QUESTION_MESSAGE, null, null, controller.getMaxScore());
                  System.out.println(score);
                  try {
                      if (score == null) {
@@ -126,7 +126,7 @@ public class GameWindow {
                          controller.setMaxScore(scoreInt);
                          didEnter = Boolean.TRUE;
                      } else {
-                         JOptionPane.showMessageDialog(frame, "ENTER SCORE ABOVE 50", "Click OK", 
+                         JOptionPane.showMessageDialog(frame, "Score Harus Diatas 50", "Click OK", 
                                  JOptionPane.ERROR_MESSAGE);
                      }
                  } catch (NumberFormatException exception) {
@@ -146,12 +146,12 @@ public class GameWindow {
      gui.add(gameDetails, BorderLayout.NORTH);
      
      JPanel gamePanel = new JPanel(new BorderLayout(4, 4));
-     gamePanel.setBorder(new TitledBorder("Current Game Details"));
+     gamePanel.setBorder(new TitledBorder("Papan Game"));
      
      JPanel gameControls = new JPanel(new BorderLayout(4, 4));
      gamePanel.add(gameControls, BorderLayout.WEST);
      
-     final JButton throwDice = new JButton("Throw");
+     final JButton throwDice = new JButton("Acak");
      gameControls.add(throwDice, BorderLayout.NORTH);
      JPanel scorePanel = new JPanel(new BorderLayout(4, 4));
      scoreTable = new JTable(new DefaultTableModel(getRowData(), getColumnNames()));
@@ -168,15 +168,15 @@ public class GameWindow {
          public void propertyChange(PropertyChangeEvent evt) {
              System.out.println(evt.getNewValue().toString());
               if (evt.getNewValue().toString().equalsIgnoreCase("false")) {
-                  if (controller.getHuman().getScore() > controller.getMaxScore() || controller.getComputer().getScore() > controller.getMaxScore()) {
-                      if(controller.getHuman().getScore() > controller.getComputer().getScore()) {
+                  if (controller.getUser().getScore() > controller.getMaxScore() || controller.getComputer().getScore() > controller.getMaxScore()) {
+                      if(controller.getUser().getScore() > controller.getComputer().getScore()) {
                           JOptionPane.showMessageDialog(frame, "YOU WIN", "Click Ok", JOptionPane.INFORMATION_MESSAGE);
-                          updateScore(PlayerType.HUMAN);
-                      } else if (controller.getHuman().getScore() < controller.getComputer().getScore()) {
+                          updateScore(PlayerType.USER);
+                      } else if (controller.getUser().getScore() < controller.getComputer().getScore()) {
                           JOptionPane.showMessageDialog(frame, "YOU LOSE", "Click Ok",JOptionPane.INFORMATION_MESSAGE);
                           updateScore(PlayerType.COMPUTER);
                       } else {
-                          JOptionPane.showOptionDialog(frame, "Same Score, Throw Again" , "Same score", JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, 0);
+                          JOptionPane.showOptionDialog(frame, "Seri, Mainkan lagi" , "SERI", JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, 0);
                           SwingUtilities.invokeLater(new Runnable() {
                               @Override
                               public void run() {
@@ -192,7 +192,7 @@ public class GameWindow {
          
           private void updateScore(PlayerType playerType) {
               switch(playerType) {
-                  case HUMAN: {
+                  case USER: {
                       score = new Score(score.getComputer(), score.getUser() + 1);
                       scoreHistoryTable = new JTable(new DefaultTableModel(getScoreData(), getScoreColumnNames()));
                       return;
@@ -204,7 +204,7 @@ public class GameWindow {
               }
               scoreHistoryTable.revalidate();
           }     
-     });
+    });
      
      frame.setContentPane(gui);
      frame.setMinimumSize(new Dimension(500, 400));
@@ -225,21 +225,21 @@ public class GameWindow {
 }
     
     public static String[][] getRowData() {
-        String[][] rows = new String[controller.getHuman().getAttemptScoreMap().keySet().size() + 2][2];
-        rows[0] = new String[]{"Attempts", "Human", "Computer"};
-        for (int i = 0; i < controller.getHuman().getAttemptScoreMap().keySet().size(); i++) {
-            rows[i + 1] = new String[]{ (i + 1) + "", controller.getHuman().getAttemptScoreMap().get(i + 1) + "", controller.getComputer().getAttemptScoreMap().get(i + 1) + ""};
-            }
-        rows[controller.getHuman().getAttemptScoreMap().keySet().size() + 1] = new String[]{"Total", controller.getHuman().getScore() + "", controller.getComputer().getScore() + ""};
-        return rows;
+        String[][] rows = new String[controller.getUser().getAttemptScoreMap().keySet().size() + 2][2];
+        rows[0] = new String[]{"Urutan", "User", "Computer"};
+        for (int i = 0; i < controller.getUser().getAttemptScoreMap().keySet().size(); i++) {
+            rows[i + 1] = new String[]{ (i + 1) + "", controller.getUser().getAttemptScoreMap().get(i + 1) + "", controller.getComputer().getAttemptScoreMap().get(i + 1) + ""};
         }
+        rows[controller.getUser().getAttemptScoreMap().keySet().size() + 1] = new String[]{"Total", controller.getUser().getScore() + "", controller.getComputer().getScore() + ""};
+        return rows;
+    }
     
     public static Object[] getColumnNames() {
-        return new String[]{"Attempts", "User", "Computer"};  
+        return new String[]{"Urutan", "User", "Computer"};  
     }
     
     public static String[][] getScoreData(){
-        String[][] rows = new String[controller.getHuman().getAttemptScoreMap().keySet().size() + 2][2];
+        String[][] rows = new String[controller.getUser().getAttemptScoreMap().keySet().size() + 2][2];
         rows[0] = new String[]{"User", "Computer"};
         rows[1] = new String[]{score.getUser() + "", score.getComputer() + ""};
         return rows;

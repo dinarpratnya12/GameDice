@@ -11,7 +11,7 @@ package diceroll.core;
  */
 public enum PlayerType {
     
-    HUMAN("HUMAN"), COMPUTER("COMPUTER");
+    USER("USER"), COMPUTER("COMPUTER");
     
     private final String type;
     

@@ -13,21 +13,21 @@ import diceroll.core.*;
  */
 public class GameController {
     
-    private Player human;
+    private Player user;
     private Player computer;
     private int maxScore = 100;
     
     public GameController() {
-        human = new Player(PlayerType.HUMAN);
+        user = new Player(PlayerType.USER);
         computer = new Player(PlayerType.COMPUTER);
     }
     
-    public Player getHuman() {
-        return human;
+    public Player getUser() {
+        return user;
     }
     
-    public void setHuman(Player human) {
-        this.human = human;
+    public void setUser(Player user) {
+        this.user = user;
     }
     
     public Player getComputer(){
@@ -42,31 +42,31 @@ public class GameController {
       switch (playerType) {
         case COMPUTER:
             return computer;
-        case HUMAN:
-            return human;
+        case USER:
+            return user;
     }
         return null;
     }
     
     public Boolean isGameGoingOn() {
-        if (computer.getAttempt() > 0 || human.getAttempt() > 0){
+        if (computer.getAttempt() > 0 || user.getAttempt() > 0){
             return true;
         }
         return false;
     }
     
     public void setNewGame() {
-        human.setCurrentGame(new DiceRollController());
+        user.setCurrentGame(new DiceRollController());
         computer.setCurrentGame(new DiceRollController());
     }
     
     public void setNewZeroReRollGame() {
-        human.setCurrentGame(new DiceRollController(1));
+        user.setCurrentGame(new DiceRollController(1));
         computer.setCurrentGame(new DiceRollController(1));
     }
     
     public boolean checkScore() {
-        if (human.getScore() > maxScore || computer.getScore() > maxScore) {
+        if (user.getScore() > maxScore || computer.getScore() > maxScore) {
             return Boolean.FALSE;
         }
         else {
